@@ -1,11 +1,14 @@
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 
 
 public class Window extends JFrame implements ActionListener
@@ -97,9 +100,17 @@ public class Window extends JFrame implements ActionListener
         //make this JFrame visible
         setVisible(true);
 
-        JPanel panel = new ImagePanel();//JLabel(new ImageIcon("test.bmp"));
-        panel.setSize(128,128);
-        window.add(panel);
+
+        Image image = null;
+        try {
+            image = ImageIO.read(new File("test2.bmp"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ImageIcon icon = new ImageIcon(image);
+
+        JLabel label = new JLabel(icon);
+        window.add(label);
         this.setSize(800,600);
     }
     //=============================================================== addListensers ==========================
