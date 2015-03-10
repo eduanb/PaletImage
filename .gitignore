@@ -1,0 +1,12 @@
+bin/
+target/
+
+# Eclipse
+.settings/
+.classpath
+.project
+.checkstyle
+
+# IntelliJ
+.idea/
+*.iml
