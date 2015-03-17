@@ -160,7 +160,7 @@ public class Window extends JFrame implements ActionListener
             public void mousePressed(MouseEvent e)
             {
                 ImageConverter ic = new ImageConverter(BMPFile);
-                ic.convert();
+                //ic.Popularity(256);
             }
         });
         //========================================================================
