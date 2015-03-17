@@ -10,6 +10,7 @@ import java.util.List;
 public class ImageConverter {
     public ImageConverter(File bmpImage)
     {
+        long start = System.currentTimeMillis();
         this.bmpImage = bmpImage;
         try {
             this.bufferedImage  = ImageIO.read(bmpImage);
@@ -20,6 +21,9 @@ public class ImageConverter {
         Truncation();
         PrintPalet();
         PrintImage();
+        long end = System.currentTimeMillis();
+        long timeInMillis = end - start;
+        System.out.println(timeInMillis);
     }
     int paletSize = 255;
     File bmpImage;
@@ -92,9 +96,31 @@ public class ImageConverter {
                 else
                 {
                     //TODO
+                    int bestPos = 0;
+                    double bestDist = Double.MAX_VALUE;
+                    for (Map.Entry<Integer,Byte> entry : paletHash.entrySet())
+                    {
+                        double dist = Distance(new Color(rgb), new Color(entry.getKey()));
+                        if(dist < bestDist)
+                        {
+                            bestDist = dist;
+                            bestPos = entry.getValue();
+                        }
+                    }
+
+
                 }
             }
         }
+    }
+
+    private double Distance(Color a, Color b)
+    {
+        double blue = a.getBlue() - b.getBlue();
+        double red = a.getRed() - b.getRed();
+        double green = a.getGreen() - b.getGreen();
+
+        return Math.sqrt((blue * blue) + (red * red) + (green * green));
     }
 
     private int unsignedToBytes(byte b) {
