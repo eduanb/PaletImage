@@ -14,6 +14,7 @@ public class ImageConverter {
         this.bmpImage = bmpImage;
         try {
             this.bufferedImage  = ImageIO.read(bmpImage);
+            System.out.println(bufferedImage.getType());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,14 +37,15 @@ public class ImageConverter {
     {
         String lineSeparator=System.getProperty("line.separator");
         StringJoiner yjoiner = new StringJoiner(lineSeparator);
+        yjoiner.add(bufferedImage.getWidth() + "," +bufferedImage.getHeight());
         for (int y = 0; y < bufferedImage.getWidth(); y++) {
             StringJoiner xjoiner = new StringJoiner(",");
             for (int x = 0; x < bufferedImage.getHeight(); x++) {
-                xjoiner.add("" + colorPointers[x][y]);
+                xjoiner.add("" + colorPointers[y][x]);
             }
             yjoiner.add(xjoiner.toString());
         }
-        printFile("image.img",yjoiner.toString());
+        printFile("image.pbi",yjoiner.toString());
     }
 
     private void PrintPalet()

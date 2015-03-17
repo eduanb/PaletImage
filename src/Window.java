@@ -4,11 +4,11 @@ import java.awt.event.ActionListener;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,7 +28,9 @@ public class Window extends JFrame implements ActionListener
     //Options Menu
     JMenu optionsMenu;
     //Open Button
-    JMenuItem openButton;
+    JMenuItem openBMPButton;
+    //Open Button
+    JMenuItem openPalletButton;
     //Convert Button
     JMenuItem convertButton;
     //Exit Button
@@ -43,6 +45,10 @@ public class Window extends JFrame implements ActionListener
     JLabel BMPImage = null;
     //BMP File
     File BMPFile = null;
+    //PHI File
+    File PBIFile = null;
+    //PL File
+    File PLFile = null;
     //=============================================================== Getters + Setters ==========================
     public JMenuItem getDepthButton()
     {
@@ -63,7 +69,8 @@ public class Window extends JFrame implements ActionListener
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         optionsMenu = new JMenu("Options");
-        openButton = new JMenuItem("Open");
+        openBMPButton = new JMenuItem("Open BMP");
+        openPalletButton = new JMenuItem("Open Pallet Image");
         convertButton = new JMenuItem("Convert");
         exitButton = new JMenuItem("Exit");
         pvpRadioButton = new JRadioButtonMenuItem("PVP");
@@ -78,7 +85,8 @@ public class Window extends JFrame implements ActionListener
         //Add Items to the menu
         menuBar.add(fileMenu);
         menuBar.add(optionsMenu);
-        fileMenu.add(openButton);
+        fileMenu.add(openBMPButton);
+        fileMenu.add(openPalletButton);
         fileMenu.add(convertButton);
         fileMenu.add(exitButton);
         optionsMenu.add(abRadioButtton);
@@ -96,7 +104,6 @@ public class Window extends JFrame implements ActionListener
         setVisible(true);
         BMPFile = new File("test2.bmp");
         BMPImage = setBMPImage(BMPFile);
-        System.out.println("Label" + BMPImage.getWidth());
         window.add(BMPImage);
         this.setSize(10 + (BMPImage.getWidth() * 2),BMPImage.getHeight() + 70);
     }
@@ -104,7 +111,6 @@ public class Window extends JFrame implements ActionListener
     {
         try {
             Image image = ImageIO.read(file);
-            System.out.println("Image:" + image.getWidth(null));
             ImageIcon icon = new ImageIcon(image);
 
             JLabel label = new JLabel(icon);
@@ -115,13 +121,22 @@ public class Window extends JFrame implements ActionListener
         }
         return null;
     }
+
+    private JLabel setBufferedImage(BufferedImage file)
+    {
+        ImageIcon icon = new ImageIcon(file);
+
+        JLabel label = new JLabel(icon);
+        label.setSize(file.getWidth(),file.getHeight());
+        return label;
+    }
     //=============================================================== addListensers ==========================
     private void addListensers()
     {
         //Listener for new game
         //Show popup and validates input
         //calls newGame to start a new game
-        openButton.addMouseListener(new MouseAdapter()
+        openBMPButton.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mousePressed(MouseEvent e)
@@ -131,13 +146,44 @@ public class Window extends JFrame implements ActionListener
                 int returnVal = fc.showOpenDialog(window);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     BMPFile = fc.getSelectedFile();
-                    System.out.println("Opening: " + BMPFile.getName() + ".");
                     window.remove(BMPImage);
                     BMPImage = setBMPImage(BMPFile);
                     window.add(BMPImage);
                     window.updateUI();
                 } else {
                     System.out.println("Canceled by user");
+                }
+            }
+        });
+
+        openPalletButton.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                JFileChooser fc = new JFileChooser();
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "pbi"));
+                fc.setDialogTitle("Select .pbi");
+                int returnVal = fc.showOpenDialog(window);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    PBIFile = fc.getSelectedFile();
+                    fc.setDialogTitle("Select .pl");
+                    returnVal = fc.showOpenDialog(window);
+                    fc.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "pl"));
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        PLFile = fc.getSelectedFile();
+                        PBIReader reader = new PBIReader();
+                        BufferedImage img = reader.getBufferedImage(PBIFile,PLFile);
+                        //TODO
+                        window.remove(BMPImage);
+                        BMPImage = setBufferedImage(img);
+                        window.add(BMPImage);
+                        window.updateUI();
+                    }else {
+                        System.out.println("Canceled [pl] by user");
+                    }
+                } else {
+                    System.out.println("Canceled [pbi] by user");
                 }
             }
         });
