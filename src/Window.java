@@ -4,6 +4,8 @@ import java.awt.event.ActionListener;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -19,16 +21,16 @@ public class Window extends JFrame implements ActionListener
 
     //Main window where everything will be displayed in
     private  JPanel window = null;
-    //Status bar at bottom
-    private JLabel status = null;
     //Menu bar that holds the menu items
     JMenuBar menuBar = null;
     //File menu
     JMenu fileMenu;
     //Options Menu
     JMenu optionsMenu;
-    //New Game Button
-    JMenuItem newGameButton;
+    //Open Button
+    JMenuItem openButton;
+    //Convert Button
+    JMenuItem convertButton;
     //Exit Button
     JMenuItem exitButton;
     //Depth menu Button
@@ -37,6 +39,10 @@ public class Window extends JFrame implements ActionListener
     JRadioButtonMenuItem pvpRadioButton;
     //Menu button to toggle AB pruning
     public JRadioButtonMenuItem abRadioButtton;
+    //Image to display the BMP in
+    JLabel BMPImage = null;
+    //BMP File
+    File BMPFile = null;
     //=============================================================== Getters + Setters ==========================
     public JMenuItem getDepthButton()
     {
@@ -46,14 +52,6 @@ public class Window extends JFrame implements ActionListener
     {
         this.depthButton = depthButton;
     }
-    public JLabel getStatus()
-    {
-        return status;
-    }
-    public void setStatus(JLabel status)
-    {
-        this.status = status;
-    }
 
     //=============================================================== Constructor ==========================
     public Window()
@@ -62,21 +60,17 @@ public class Window extends JFrame implements ActionListener
         super("Eduan Bekker 12214834");
         //Create all the GUI elements
         window = new JPanel();
-        status = new JLabel();
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         optionsMenu = new JMenu("Options");
-        newGameButton = new JMenuItem("New Game");
+        openButton = new JMenuItem("Open");
+        convertButton = new JMenuItem("Convert");
         exitButton = new JMenuItem("Exit");
         pvpRadioButton = new JRadioButtonMenuItem("PVP");
         abRadioButtton = new JRadioButtonMenuItem("AB Pruning");
 
         //Add Window and Status bar
-        getContentPane().add(window, BorderLayout.CENTER);
-        getContentPane().add(status, BorderLayout.SOUTH);
-
-        //Set the alignment of the text within status bar to center
-        status.setHorizontalAlignment(JLabel.CENTER);
+        getContentPane().add(window, BorderLayout.WEST);
 
         //Set the menu Bar
         setJMenuBar(menuBar);
@@ -84,7 +78,8 @@ public class Window extends JFrame implements ActionListener
         //Add Items to the menu
         menuBar.add(fileMenu);
         menuBar.add(optionsMenu);
-        fileMenu.add(newGameButton);
+        fileMenu.add(openButton);
+        fileMenu.add(convertButton);
         fileMenu.add(exitButton);
         optionsMenu.add(abRadioButtton);
         optionsMenu.add(pvpRadioButton);
@@ -99,19 +94,26 @@ public class Window extends JFrame implements ActionListener
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //make this JFrame visible
         setVisible(true);
-
-
-        Image image = null;
+        BMPFile = new File("test2.bmp");
+        BMPImage = setBMPImage(BMPFile);
+        System.out.println("Label" + BMPImage.getWidth());
+        window.add(BMPImage);
+        this.setSize(10 + (BMPImage.getWidth() * 2),BMPImage.getHeight() + 70);
+    }
+    private JLabel setBMPImage(File file)
+    {
         try {
-            image = ImageIO.read(new File("test2.bmp"));
+            Image image = ImageIO.read(file);
+            System.out.println("Image:" + image.getWidth(null));
+            ImageIcon icon = new ImageIcon(image);
+
+            JLabel label = new JLabel(icon);
+            label.setSize(image.getWidth(null),image.getHeight(null));
+            return label;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImageIcon icon = new ImageIcon(image);
-
-        JLabel label = new JLabel(icon);
-        window.add(label);
-        this.setSize(800,600);
+        return null;
     }
     //=============================================================== addListensers ==========================
     private void addListensers()
@@ -119,15 +121,23 @@ public class Window extends JFrame implements ActionListener
         //Listener for new game
         //Show popup and validates input
         //calls newGame to start a new game
-        newGameButton.addMouseListener(new MouseAdapter()
+        openButton.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mousePressed(MouseEvent e)
             {
-                int i = 0;
-                while(i < 4 || i > 20)
-                {
-                    i = Integer.parseInt(showInputDialog("Size of grid?"));
+                final JFileChooser fc = new JFileChooser();
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "bmp"));
+                int returnVal = fc.showOpenDialog(window);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    BMPFile = fc.getSelectedFile();
+                    System.out.println("Opening: " + BMPFile.getName() + ".");
+                    window.remove(BMPImage);
+                    BMPImage = setBMPImage(BMPFile);
+                    window.add(BMPImage);
+                    window.updateUI();
+                } else {
+                    System.out.println("Canceled by user");
                 }
             }
         });
@@ -140,6 +150,17 @@ public class Window extends JFrame implements ActionListener
             {
                 setVisible(false); //you can't see me!
                 dispose(); //Destroy the JFrame object
+            }
+        });
+        //========================================================================
+        //exits whole program
+        convertButton.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                ImageConverter ic = new ImageConverter(BMPFile);
+                ic.convert();
             }
         });
         //========================================================================
