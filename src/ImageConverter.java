@@ -41,7 +41,7 @@ public class ImageConverter {
         for (int y = 0; y < bufferedImage.getWidth(); y++) {
             StringJoiner xjoiner = new StringJoiner(",");
             for (int x = 0; x < bufferedImage.getHeight(); x++) {
-                xjoiner.add("" + colorPointers[y][x]);
+                xjoiner.add("" + colorPointers[x][y]);
             }
             yjoiner.add(xjoiner.toString());
         }
