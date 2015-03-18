@@ -14,7 +14,6 @@ public class ImageConverter {
         this.bmpImage = bmpImage;
         try {
             this.bufferedImage  = ImageIO.read(bmpImage);
-            System.out.println(bufferedImage.getType());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,7 +23,7 @@ public class ImageConverter {
         PrintImage();
         long end = System.currentTimeMillis();
         long timeInMillis = end - start;
-        System.out.println(timeInMillis);
+        System.out.println("Total time:" +timeInMillis + "ms");
     }
     int paletSize = 255;
     File bmpImage;
@@ -38,9 +37,9 @@ public class ImageConverter {
         String lineSeparator=System.getProperty("line.separator");
         StringJoiner yjoiner = new StringJoiner(lineSeparator);
         yjoiner.add(bufferedImage.getWidth() + "," +bufferedImage.getHeight());
-        for (int y = 0; y < bufferedImage.getWidth(); y++) {
+        for (int y = 0; y < bufferedImage.getHeight(); y++) {
             StringJoiner xjoiner = new StringJoiner(",");
-            for (int x = 0; x < bufferedImage.getHeight(); x++) {
+            for (int x = 0; x < bufferedImage.getWidth(); x++) {
                 xjoiner.add("" + colorPointers[x][y]);
             }
             yjoiner.add(xjoiner.toString());
@@ -54,7 +53,7 @@ public class ImageConverter {
         for (Map.Entry<Integer,Byte> entry : paletHash.entrySet()) {
            joiner.add(entry.getKey().toString());
         }
-        printFile("palet.pl",joiner.toString());
+        printFile("pallet.pl",joiner.toString());
     }
     private void Popularity(int count)
     {

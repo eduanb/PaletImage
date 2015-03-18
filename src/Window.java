@@ -43,6 +43,8 @@ public class Window extends JFrame implements ActionListener
     public JRadioButtonMenuItem abRadioButtton;
     //Image to display the BMP in
     JLabel BMPImage = null;
+    //Image to display the PBI in
+    JLabel PBIImage = null;
     //BMP File
     File BMPFile = null;
     //PHI File
@@ -105,6 +107,15 @@ public class Window extends JFrame implements ActionListener
         BMPFile = new File("test2.bmp");
         BMPImage = setBMPImage(BMPFile);
         window.add(BMPImage);
+
+
+        PBIFile = new File("image.pbi");
+        PLFile = new File("pallet.pl");
+        PBIReader reader = new PBIReader();
+        BufferedImage img = reader.getBufferedImage(PBIFile,PLFile);
+        PBIImage = setBufferedImage(img);
+        window.add(PBIImage);
+
         this.setSize(10 + (BMPImage.getWidth() * 2),BMPImage.getHeight() + 70);
     }
     private JLabel setBMPImage(File file)
@@ -147,8 +158,10 @@ public class Window extends JFrame implements ActionListener
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     BMPFile = fc.getSelectedFile();
                     window.remove(BMPImage);
+                    window.remove(PBIImage);
                     BMPImage = setBMPImage(BMPFile);
                     window.add(BMPImage);
+                    window.add(PBIImage);
                     window.updateUI();
                 } else {
                     System.out.println("Canceled by user");
@@ -206,7 +219,15 @@ public class Window extends JFrame implements ActionListener
             public void mousePressed(MouseEvent e)
             {
                 ImageConverter ic = new ImageConverter(BMPFile);
-                //ic.Popularity(256);
+                window.remove(PBIImage);
+                PBIFile = new File("image.pbi");
+                PLFile = new File("pallet.pl");
+                PBIReader reader = new PBIReader();
+                BufferedImage img = reader.getBufferedImage(PBIFile,PLFile);
+                PBIImage = setBufferedImage(img);
+                window.remove(PBIImage);
+                window.add(PBIImage);
+                window.updateUI();
             }
         });
         //========================================================================
