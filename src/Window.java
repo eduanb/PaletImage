@@ -51,6 +51,9 @@ public class Window extends JFrame implements ActionListener
     File PBIFile = null;
     //PL File
     File PLFile = null;
+    ImageConverter imageConverter;
+    Dithering dithering;
+    Quantization quantization;
     //=============================================================== Getters + Setters ==========================
     public JMenuItem getDepthButton()
     {
@@ -117,6 +120,10 @@ public class Window extends JFrame implements ActionListener
         window.add(PBIImage);
 
         this.setSize(10 + (BMPImage.getWidth() * 2),BMPImage.getHeight() + 70);
+        imageConverter = new ImageConverter();
+        dithering = new Truncation();
+        quantization = new Popularity();
+
     }
     private JLabel setBMPImage(File file)
     {
@@ -218,7 +225,7 @@ public class Window extends JFrame implements ActionListener
             @Override
             public void mousePressed(MouseEvent e)
             {
-                ImageConverter ic = new ImageConverter(BMPFile);
+                imageConverter.ConvertAndSaveBMP(BMPFile,255,quantization,dithering);
                 window.remove(PBIImage);
                 PBIFile = new File("image.pbi");
                 PLFile = new File("pallet.pl");
