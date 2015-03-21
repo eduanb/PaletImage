@@ -26,7 +26,9 @@ public class Window extends JFrame implements ActionListener
     //File menu
     JMenu fileMenu;
     //Options Menu
-    JMenu optionsMenu;
+    JMenu ditheringMenu;
+    //Options Menu
+    JMenu quantificationMenu;
     //Open Button
     JMenuItem openBMPButton;
     //Open Button
@@ -35,12 +37,10 @@ public class Window extends JFrame implements ActionListener
     JMenuItem convertButton;
     //Exit Button
     JMenuItem exitButton;
-    //Depth menu Button
-    private JMenuItem depthButton = null;
-    //Radio Button to toggle PVP
-    JRadioButtonMenuItem pvpRadioButton;
-    //Menu button to toggle AB pruning
-    public JRadioButtonMenuItem abRadioButtton;
+    JRadioButtonMenuItem truncationRadioButton;
+    JRadioButtonMenuItem simpleDitheringRadioButton;
+    JRadioButtonMenuItem popularityRadioButton;
+    JRadioButtonMenuItem medianCutRadioButtion;
     //Image to display the BMP in
     JLabel BMPImage = null;
     //Image to display the PBI in
@@ -54,16 +54,6 @@ public class Window extends JFrame implements ActionListener
     ImageConverter imageConverter;
     Dithering dithering;
     Quantization quantization;
-    //=============================================================== Getters + Setters ==========================
-    public JMenuItem getDepthButton()
-    {
-        return depthButton;
-    }
-    public void setDepthButton(JMenuItem depthButton)
-    {
-        this.depthButton = depthButton;
-    }
-
     //=============================================================== Constructor ==========================
     public Window()
     {
@@ -73,13 +63,16 @@ public class Window extends JFrame implements ActionListener
         window = new JPanel();
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
-        optionsMenu = new JMenu("Options");
+        ditheringMenu = new JMenu("Dithering");
+        quantificationMenu = new JMenu("Quantification");
         openBMPButton = new JMenuItem("Open BMP");
         openPalletButton = new JMenuItem("Open Pallet Image");
         convertButton = new JMenuItem("Convert");
         exitButton = new JMenuItem("Exit");
-        pvpRadioButton = new JRadioButtonMenuItem("PVP");
-        abRadioButtton = new JRadioButtonMenuItem("AB Pruning");
+        truncationRadioButton = new JRadioButtonMenuItem("Truncation");
+        simpleDitheringRadioButton = new JRadioButtonMenuItem("Simple Dithering");
+        popularityRadioButton = new JRadioButtonMenuItem("Popularity");
+        medianCutRadioButtion = new JRadioButtonMenuItem("Median Cut");
 
         //Add Window and Status bar
         getContentPane().add(window, BorderLayout.WEST);
@@ -89,17 +82,20 @@ public class Window extends JFrame implements ActionListener
 
         //Add Items to the menu
         menuBar.add(fileMenu);
-        menuBar.add(optionsMenu);
+        menuBar.add(quantificationMenu);
+        menuBar.add(ditheringMenu);
         fileMenu.add(openBMPButton);
         fileMenu.add(openPalletButton);
         fileMenu.add(convertButton);
         fileMenu.add(exitButton);
-        optionsMenu.add(abRadioButtton);
-        optionsMenu.add(pvpRadioButton);
+        ditheringMenu.add(truncationRadioButton);
+        ditheringMenu.add(simpleDitheringRadioButton);
+        quantificationMenu.add(popularityRadioButton);
+        quantificationMenu.add(medianCutRadioButtion);
 
         //Set default values to radio buttons
-        pvpRadioButton.setSelected(true);
-        abRadioButtton.setSelected(true);
+        truncationRadioButton.setSelected(true);
+        popularityRadioButton.setSelected(true);
 
         //Add  events to on click of menu items
         addListensers();
@@ -237,31 +233,42 @@ public class Window extends JFrame implements ActionListener
                 window.updateUI();
             }
         });
-        //========================================================================
-        //changes pvp in settings
-        pvpRadioButton.addMouseListener(new MouseAdapter()
-        {
+        truncationRadioButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseReleased(MouseEvent e)
-            {
-
+            public void mouseReleased(MouseEvent e) {
+                truncationRadioButton.setSelected(true);
+                simpleDitheringRadioButton.setSelected(false);
+                dithering = new Truncation();
             }
         });
-        //========================================================================
-        //changes the heuristic between simple minimax and minimax with AB pruning
-        abRadioButtton.addMouseListener(new MouseAdapter()
-        {
+        simpleDitheringRadioButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseReleased(MouseEvent e)
-            {
-
+            public void mouseReleased(MouseEvent e) {
+                truncationRadioButton.setSelected(false);
+                simpleDitheringRadioButton.setSelected(true);
+                dithering = new SimpleDithering();
+            }
+        });
+        popularityRadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                popularityRadioButton.setSelected(true);
+                medianCutRadioButtion.setSelected(false);
+                quantization = new Popularity();
+            }
+        });
+        medianCutRadioButtion.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                medianCutRadioButtion.setSelected(true);
+                popularityRadioButton.setSelected(false);
+                quantization = new MedianCut();
             }
         });
     }
 
     //=============================================================== showInputDialog ==========================
     //recursive function to make sure that only integer values were input
-    //paramater is what to display
     private String showInputDialog(String display)
     {
         String inputValue = JOptionPane.showInputDialog(window,display);

@@ -6,7 +6,7 @@ import java.util.*;
  * Created by Eduan on 2015-03-17.
  */
 public class ImageConverter {
-    public void ConvertAndSaveBMP(File bmpImage, int paletSize, Quantization quantization, Dithering dither)
+    public void ConvertAndSaveBMP(File bmpImage, int palletSize, Quantization quantization, Dithering dither)
     {
         try {
         long start = System.currentTimeMillis();
@@ -14,7 +14,7 @@ public class ImageConverter {
 
             BufferedImage bufferedImage  = ImageIO.read(bmpImage);
 
-            LinkedHashMap<Integer,Byte> palletHash = quantization.PerformQuantization(bufferedImage, paletSize);
+            LinkedHashMap<Integer,Byte> palletHash = quantization.PerformQuantization(bufferedImage, palletSize);
             byte[][] colorPointers = dither.PerformDithering(bufferedImage,palletHash);
             PrintPallet(palletHash);
             PrintImage(colorPointers, bufferedImage.getWidth(), bufferedImage.getHeight());
