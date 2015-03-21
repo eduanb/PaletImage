@@ -12,7 +12,7 @@ public class Truncation extends Dithering {
     {
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
-        byte[][] colorPointers = colorPointers = new byte[width][height];
+        byte[][] colorPointers = new byte[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++)
             {

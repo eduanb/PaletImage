@@ -147,9 +147,6 @@ public class Window extends JFrame implements ActionListener
     //=============================================================== addListensers ==========================
     private void addListensers()
     {
-        //Listener for new game
-        //Show popup and validates input
-        //calls newGame to start a new game
         openBMPButton.addMouseListener(new MouseAdapter()
         {
             @Override
