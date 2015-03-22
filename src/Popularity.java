@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class Popularity extends Quantization {
     @Override
-    public LinkedHashMap PerformQuantization(BufferedImage bufferedImage, int paletSize) {
+    public LinkedHashMap PerformQuantization(BufferedImage bufferedImage, int palletSize) {
         Map<Integer,Integer> map = new HashMap<>();
         for (int x = 0; x < bufferedImage.getWidth(); x++) {
             for (int y = 0; y < bufferedImage.getHeight(); y++) {
@@ -22,16 +22,16 @@ public class Popularity extends Quantization {
 
         List sortedList = SortedMap(map);
         //We are only interested in first n elements
-        if(sortedList.size() > paletSize)
-            sortedList.subList(paletSize, sortedList.size()).clear();
+        if(sortedList.size() > palletSize)
+            sortedList.subList(palletSize, sortedList.size()).clear();
         byte i = 0;
-        LinkedHashMap<Integer,Byte> paletHash = new LinkedHashMap<>();
+        LinkedHashMap<Integer,Byte> palletHash = new LinkedHashMap<>();
         for(Object o : sortedList)
         {
             Map.Entry<Integer,Integer> entry = (Map.Entry<Integer, Integer>) o;
-            paletHash.put(entry.getKey(),i);
+            palletHash.put(entry.getKey(),i);
             i++;
         }
-        return paletHash;
+        return palletHash;
     }
 }
