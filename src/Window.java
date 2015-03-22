@@ -51,8 +51,6 @@ public class Window extends JFrame implements ActionListener
     JRadioButtonMenuItem pallet64RadioButton;
     JRadioButtonMenuItem pallet128RadioButton;
     JRadioButtonMenuItem pallet256RadioButton;
-    JRadioButtonMenuItem pallet512RadioButton;
-    JRadioButtonMenuItem pallet1024RadioButton;
     //Image to display the BMP in
     JLabel BMPImage = null;
     //Image to display the PBI in
@@ -94,8 +92,6 @@ public class Window extends JFrame implements ActionListener
         pallet64RadioButton = new JRadioButtonMenuItem("64");
         pallet128RadioButton = new JRadioButtonMenuItem("128");
         pallet256RadioButton = new JRadioButtonMenuItem("256");
-        pallet512RadioButton = new JRadioButtonMenuItem("512");
-        pallet1024RadioButton = new JRadioButtonMenuItem("1024");
         //Add Window and Status bar
         getContentPane().add(window, BorderLayout.WEST);
 
@@ -122,8 +118,6 @@ public class Window extends JFrame implements ActionListener
         palletSizeMenu.add(pallet64RadioButton);
         palletSizeMenu.add(pallet128RadioButton);
         palletSizeMenu.add(pallet256RadioButton);
-        palletSizeMenu.add(pallet512RadioButton);
-        palletSizeMenu.add(pallet1024RadioButton);
 
         //Set default values to radio buttons
         truncationRadioButton.setSelected(true);
@@ -308,8 +302,6 @@ public class Window extends JFrame implements ActionListener
                 pallet64RadioButton.setSelected(false);
                 pallet128RadioButton.setSelected(false);
                 pallet256RadioButton.setSelected(false);
-                pallet512RadioButton.setSelected(false);
-                pallet1024RadioButton.setSelected(false);
             }
         });
 
@@ -323,8 +315,6 @@ public class Window extends JFrame implements ActionListener
                 pallet64RadioButton.setSelected(false);
                 pallet128RadioButton.setSelected(false);
                 pallet256RadioButton.setSelected(false);
-                pallet512RadioButton.setSelected(false);
-                pallet1024RadioButton.setSelected(false);
             }
         });
         pallet32RadioButton.addMouseListener(new MouseAdapter() {
@@ -337,8 +327,6 @@ public class Window extends JFrame implements ActionListener
                 pallet64RadioButton.setSelected(false);
                 pallet128RadioButton.setSelected(false);
                 pallet256RadioButton.setSelected(false);
-                pallet512RadioButton.setSelected(false);
-                pallet1024RadioButton.setSelected(false);
             }
         });
         pallet64RadioButton.addMouseListener(new MouseAdapter() {
@@ -351,8 +339,6 @@ public class Window extends JFrame implements ActionListener
                 pallet64RadioButton.setSelected(true);
                 pallet128RadioButton.setSelected(false);
                 pallet256RadioButton.setSelected(false);
-                pallet512RadioButton.setSelected(false);
-                pallet1024RadioButton.setSelected(false);
             }
         });
         pallet128RadioButton.addMouseListener(new MouseAdapter() {
@@ -365,8 +351,6 @@ public class Window extends JFrame implements ActionListener
                 pallet64RadioButton.setSelected(false);
                 pallet128RadioButton.setSelected(true);
                 pallet256RadioButton.setSelected(false);
-                pallet512RadioButton.setSelected(false);
-                pallet1024RadioButton.setSelected(false);
             }
         });
         pallet256RadioButton.addMouseListener(new MouseAdapter() {
@@ -379,38 +363,9 @@ public class Window extends JFrame implements ActionListener
                 pallet64RadioButton.setSelected(false);
                 pallet128RadioButton.setSelected(false);
                 pallet256RadioButton.setSelected(true);
-                pallet512RadioButton.setSelected(false);
-                pallet1024RadioButton.setSelected(false);
             }
         });
-        pallet512RadioButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                palletSize = 512;
-                pallet8RadioButton.setSelected(false);
-                pallet16RadioButton.setSelected(false);
-                pallet32RadioButton.setSelected(false);
-                pallet64RadioButton.setSelected(false);
-                pallet128RadioButton.setSelected(false);
-                pallet256RadioButton.setSelected(false);
-                pallet512RadioButton.setSelected(true);
-                pallet1024RadioButton.setSelected(false);
-            }
-        });
-        pallet1024RadioButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                palletSize = 1024;
-                pallet8RadioButton.setSelected(false);
-                pallet16RadioButton.setSelected(false);
-                pallet32RadioButton.setSelected(false);
-                pallet64RadioButton.setSelected(false);
-                pallet128RadioButton.setSelected(false);
-                pallet256RadioButton.setSelected(false);
-                pallet512RadioButton.setSelected(false);
-                pallet1024RadioButton.setSelected(true);
-            }
-        });
+
     }
 
     //=============================================================== showInputDialog ==========================
