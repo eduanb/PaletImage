@@ -27,19 +27,26 @@ public class MedianCut extends Quantization {
     byte pos = 0;
     private void PerformMedianCut( List<Color> originalColors, int n)
     {
+        System.out.println(originalColors.size());
+        if(originalColors.size() == 0 || n == 10)
+            return;
         //TODO: Check case where less than 255 colors
         //TODO: Think about this stopping condition
-        if(n == palletSize)
+        if(n == palletSize || originalColors.size() < 2)
         {
             palletHash.put(findAverage(originalColors).getRGB(), pos++);
         }
         else
         {
             int splitCol = findColorToSplitOn(originalColors);
-            List<List<Color>> splitColors = split(originalColors,splitCol);
-            n++;
-            PerformMedianCut(splitColors.get(0), n);
-            PerformMedianCut(splitColors.get(1), n);
+            List<Color>[] splitColors = split(originalColors,splitCol);
+            if(splitColors[1].size() == 0)
+                palletHash.put(originalColors.get(0).getRGB(), pos++);
+            else {
+                n++;
+                PerformMedianCut(splitColors[0], n);
+                PerformMedianCut(splitColors[1], n);
+            }
         }
 
     }
@@ -78,10 +85,86 @@ public class MedianCut extends Quantization {
         return result;
     }
 
-    private  List<List<Color>> split( List<Color> originalColors, int dimensionToSplitOn)
+    private  List<Color>[] split( List<Color> originalColors, int dimensionToSplitOn)
     {
-        //TODO:
-        return null;
+        int median;
+        List<Color>[] result = new LinkedList[2];
+        result[0] = new LinkedList<>();
+        result[1] = new LinkedList<>();
+        switch (dimensionToSplitOn) {
+            case 0 :
+            {
+                median = findAverageForR(originalColors);
+                for(Color c : originalColors)
+                {
+                    if(c.getRed() <= median) {
+                        result[0].add(c);
+                    }
+                    else {
+                        result[1].add(c);
+                    }
+                }
+                break;
+            }
+            case 1 :
+            {
+                median = findAverageForG(originalColors);
+                for(Color c : originalColors)
+                {
+                    if(c.getGreen() <= median){
+                        result[0].add(c);
+                    }
+                    else {
+                        result[1].add(c);
+                    }
+                }
+                break;
+            }
+            case 2 :
+            {
+                median = findAverageForB(originalColors);
+                for(Color c : originalColors)
+                {
+                    if(c.getBlue() <= median){
+                        result[0].add(c);
+                    } else {
+                        result[1].add(c);
+                    }
+                }
+                break;
+            }
+        }
+        return result;
+    }
+
+    private int findAverageForR(List<Color> originalColors)
+    {
+        int R = 0;
+        for(Color c : originalColors)
+        {
+            R += c.getRed();
+        }
+        return R / originalColors.size();
+    }
+
+    private int findAverageForG(List<Color> originalColors)
+    {
+        int G = 0;
+        for(Color c : originalColors)
+        {
+            G += c.getGreen();
+        }
+        return G / originalColors.size();
+    }
+
+    private int findAverageForB(List<Color> originalColors)
+    {
+        int B = 0;
+        for(Color c : originalColors)
+        {
+            B += c.getBlue();
+        }
+        return B / originalColors.size();
     }
 
     private Color findAverage(List<Color> originalColors)

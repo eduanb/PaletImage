@@ -104,17 +104,20 @@ public class Window extends JFrame implements ActionListener
         //make this JFrame visible
         setVisible(true);
         BMPFile = new File("test2.bmp");
-        BMPImage = setBMPImage(BMPFile);
-        window.add(BMPImage);
+        if(BMPFile.exists()) {
+            BMPImage = setBMPImage(BMPFile);
+            window.add(BMPImage);
+        }
 
 
         PBIFile = new File("image.pbi");
         PLFile = new File("pallet.pl");
-        PBIReader reader = new PBIReader();
-        BufferedImage img = reader.getBufferedImage(PBIFile,PLFile);
-        PBIImage = setBufferedImage(img);
-        window.add(PBIImage);
-
+        if(PBIFile.exists() && PLFile.exists()) {
+            PBIReader reader = new PBIReader();
+            BufferedImage img = reader.getBufferedImage(PBIFile, PLFile);
+            PBIImage = setBufferedImage(img);
+            window.add(PBIImage);
+        }
         this.setSize(10 + (BMPImage.getWidth() * 2),BMPImage.getHeight() + 70);
         imageConverter = new ImageConverter();
         dithering = new Truncation();
