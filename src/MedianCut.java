@@ -9,7 +9,6 @@ import java.util.List;
 public class MedianCut extends Quantization {
     @Override
     public LinkedHashMap PerformQuantization(BufferedImage bufferedImage, int palletSize) {
-        this.palletSize = palletSize;
         List<Color> originalColors = new LinkedList<>();
         for(int x = 0; x < bufferedImage.getWidth(); x++)
         {
@@ -18,39 +17,53 @@ public class MedianCut extends Quantization {
                 originalColors.add(new Color(bufferedImage.getRGB(x,y)));
             }
         }
-        PerformMedianCut( originalColors, 0);
-        return palletHash;
+        return PerformMedianCut( originalColors,palletSize);
     }
 
-    int palletSize;
-    LinkedHashMap<Integer,Byte> palletHash = new LinkedHashMap<>();
-    byte pos = 0;
-    private void PerformMedianCut( List<Color> originalColors, int n)
+    private LinkedHashMap<Integer,Byte> PerformMedianCut( List<Color> originalColors, int palletSize)
     {
-        System.out.println(originalColors.size());
-        if(originalColors.size() == 0 || n == 10)
-            return;
-        //TODO: Check case where less than 255 colors
-        //TODO: Think about this stopping condition
-        if(n == palletSize || originalColors.size() < 2)
+        List<List<Color>> queue = new LinkedList<>();
+        queue.add(originalColors);
+        int nextElementsToDepthIncrease = 0;
+        int elementsToDepthIncrease = 1;
+        int currentDepth = 0;
+        while(!queue.isEmpty())
         {
-            palletHash.put(findAverage(originalColors).getRGB(), pos++);
-        }
-        else
-        {
-            int splitCol = findColorToSplitOn(originalColors);
-            List<Color>[] splitColors = split(originalColors,splitCol);
-            if(splitColors[1].size() == 0)
-                palletHash.put(originalColors.get(0).getRGB(), pos++);
-            else {
-                n++;
-                PerformMedianCut(splitColors[0], n);
-                PerformMedianCut(splitColors[1], n);
+            nextElementsToDepthIncrease += 2;
+            if (--elementsToDepthIncrease == 0)
+            {
+                if (++currentDepth == 8)
+                {
+                    return addToPallet(queue);
+                }
+                elementsToDepthIncrease = nextElementsToDepthIncrease;
+                nextElementsToDepthIncrease = 0;
             }
-        }
 
+            List<Color> currentNode = queue.remove(0);
+
+            int splitCol = findColorToSplitOn(currentNode);
+            List<Color>[] splitColors = split(currentNode,splitCol);
+
+
+            queue.add(splitColors[0]);
+            if( splitColors[1].size() > 0)
+                queue.add(splitColors[1]);
+
+        }
+        return null;
     }
 
+    private LinkedHashMap<Integer,Byte> addToPallet( List<List<Color>> colorList)
+    {
+        LinkedHashMap<Integer,Byte> result = new LinkedHashMap<>();
+        byte pos = 0;
+        for(List<Color> color : colorList) {
+            System.out.println(pos);
+            result.put(findAverage(color).getRGB(), pos++);
+        }
+        return result;
+    }
     private int findColorToSplitOn( List<Color> originalColors)
     {
         int maxR = 0, maxG = 0, maxB = 0;
