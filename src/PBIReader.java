@@ -30,7 +30,6 @@ public class PBIReader {
             e.printStackTrace();
         }
         try {
-            StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             int i = 0;
             for(String palletColor : line.split(","))
@@ -38,8 +37,6 @@ public class PBIReader {
                 int col = Integer.parseInt(palletColor);
                 pallet[i++] = new Color(col);
             }
-
-            String everything = sb.toString();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -66,14 +63,13 @@ public class PBIReader {
             e.printStackTrace();
         }
         try {
-            StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             int width = Integer.parseInt(line.substring(0,line.indexOf(','))) + 1;
             int height = Integer.parseInt(line.substring(line.indexOf(',')+1,line.length())) + 1;
             image = new byte[width][height];
             result = new BufferedImage(width + 1,height + 1,BufferedImage.TYPE_3BYTE_BGR);
 
-            int x = 0, y =0;
+            int x, y =0;
             line = br.readLine();
             while (line != null) {
                 y++;
@@ -89,7 +85,6 @@ public class PBIReader {
                 }
                 line = br.readLine();
             }
-            String everything = sb.toString();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
