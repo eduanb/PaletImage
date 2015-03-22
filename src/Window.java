@@ -129,7 +129,7 @@ public class Window extends JFrame implements ActionListener
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //make this JFrame visible
         setVisible(true);
-        BMPFile = new File("test2.bmp");
+        BMPFile = new File("complex.bmp");
         if(BMPFile.exists()) {
             BMPImage = setBMPImage(BMPFile);
             window.add(BMPImage);
@@ -144,7 +144,10 @@ public class Window extends JFrame implements ActionListener
             PBIImage = setBufferedImage(img);
             window.add(PBIImage);
         }
-        this.setSize(10 + (BMPImage.getWidth() * 2),BMPImage.getHeight() + 70);
+        if(BMPImage == null)
+            this.setSize(800,600);
+        else
+            this.setSize(10 + (BMPImage.getWidth() * 2),BMPImage.getHeight() + 70);
         imageConverter = new ImageConverter();
         dithering = new Truncation();
         quantization = new Popularity();
