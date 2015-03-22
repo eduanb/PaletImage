@@ -32,8 +32,13 @@ public class Window extends JFrame implements ActionListener
 
     //Options Menu
     JMenu palletSizeMenu;
+    JMenu embedMenu;
+    JMenu readMenu;
     //Open Button
     JMenuItem openBMPButton;
+
+    JMenuItem LSBButton;
+    JMenuItem readLSBButton;
     //Open Button
     JMenuItem openPalletButton;
     //Convert Button
@@ -75,12 +80,16 @@ public class Window extends JFrame implements ActionListener
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         ditheringMenu = new JMenu("Dithering");
+        embedMenu = new JMenu("Embed a Message");
+        readMenu = new JMenu("Read a Message");
         palletSizeMenu = new JMenu("Pallet Size");
         quantificationMenu = new JMenu("Quantification");
         openBMPButton = new JMenuItem("Open BMP");
         openPalletButton = new JMenuItem("Open Pallet Image");
         convertButton = new JMenuItem("Convert");
         exitButton = new JMenuItem("Exit");
+        LSBButton = new JMenuItem("Embed LSB");
+        readLSBButton = new JMenuItem("Read LSB");
         truncationRadioButton = new JRadioButtonMenuItem("Truncation");
         simpleDitheringRadioButton = new JRadioButtonMenuItem("Simple Dithering");
         popularityRadioButton = new JRadioButtonMenuItem("Popularity");
@@ -103,6 +112,8 @@ public class Window extends JFrame implements ActionListener
         menuBar.add(quantificationMenu);
         menuBar.add(ditheringMenu);
         menuBar.add(palletSizeMenu);
+        menuBar.add(embedMenu);
+        menuBar.add(readMenu);
         fileMenu.add(openBMPButton);
         fileMenu.add(openPalletButton);
         fileMenu.add(convertButton);
@@ -112,6 +123,8 @@ public class Window extends JFrame implements ActionListener
         quantificationMenu.add(popularityRadioButton);
         quantificationMenu.add(medianCutRadioButton);
 
+        embedMenu.add(LSBButton);
+        readMenu.add(readLSBButton);
         palletSizeMenu.add(pallet8RadioButton);
         palletSizeMenu.add(pallet16RadioButton);
         palletSizeMenu.add(pallet32RadioButton);
@@ -244,7 +257,26 @@ public class Window extends JFrame implements ActionListener
             }
         });
         //========================================================================
-        //exits whole program
+        LSBButton.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                Stego stego = new LSB();
+                String message = showInputDialog("Message to encode:");
+                System.out.println(message);
+                stego.EmbedMessage(PBIFile, PLFile,message);
+            }
+        });
+        readLSBButton.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                Stego stego = new LSB();
+                JOptionPane.showMessageDialog(null, stego.readMessage(PBIFile, PLFile));
+            }
+        });
         convertButton.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -373,10 +405,9 @@ public class Window extends JFrame implements ActionListener
 
     //=============================================================== showInputDialog ==========================
     //recursive function to make sure that only integer values were input
-    private String showInputDialog(String display)
-    {
+    private String showInputDialog(String display) {
         String inputValue = JOptionPane.showInputDialog(window,display);
-        if(inputValue == null || inputValue.isEmpty() || !inputValue.matches("[0-9]*"))
+        if(inputValue == null || inputValue.isEmpty())
         {
             inputValue = showInputDialog(display);
         }
