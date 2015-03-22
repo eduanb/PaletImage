@@ -29,6 +29,9 @@ public class Window extends JFrame implements ActionListener
     JMenu ditheringMenu;
     //Options Menu
     JMenu quantificationMenu;
+
+    //Options Menu
+    JMenu palletSizeMenu;
     //Open Button
     JMenuItem openBMPButton;
     //Open Button
@@ -40,7 +43,16 @@ public class Window extends JFrame implements ActionListener
     JRadioButtonMenuItem truncationRadioButton;
     JRadioButtonMenuItem simpleDitheringRadioButton;
     JRadioButtonMenuItem popularityRadioButton;
-    JRadioButtonMenuItem medianCutRadioButtion;
+    JRadioButtonMenuItem medianCutRadioButton;
+
+    JRadioButtonMenuItem pallet8RadioButton;
+    JRadioButtonMenuItem pallet16RadioButton;
+    JRadioButtonMenuItem pallet32RadioButton;
+    JRadioButtonMenuItem pallet64RadioButton;
+    JRadioButtonMenuItem pallet128RadioButton;
+    JRadioButtonMenuItem pallet256RadioButton;
+    JRadioButtonMenuItem pallet512RadioButton;
+    JRadioButtonMenuItem pallet1024RadioButton;
     //Image to display the BMP in
     JLabel BMPImage = null;
     //Image to display the PBI in
@@ -54,6 +66,7 @@ public class Window extends JFrame implements ActionListener
     ImageConverter imageConverter;
     Dithering dithering;
     Quantization quantization;
+    int palletSize = 256;
     //=============================================================== Constructor ==========================
     public Window()
     {
@@ -64,6 +77,7 @@ public class Window extends JFrame implements ActionListener
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         ditheringMenu = new JMenu("Dithering");
+        palletSizeMenu = new JMenu("Pallet Size");
         quantificationMenu = new JMenu("Quantification");
         openBMPButton = new JMenuItem("Open BMP");
         openPalletButton = new JMenuItem("Open Pallet Image");
@@ -72,18 +86,27 @@ public class Window extends JFrame implements ActionListener
         truncationRadioButton = new JRadioButtonMenuItem("Truncation");
         simpleDitheringRadioButton = new JRadioButtonMenuItem("Simple Dithering");
         popularityRadioButton = new JRadioButtonMenuItem("Popularity");
-        medianCutRadioButtion = new JRadioButtonMenuItem("Median Cut");
+        medianCutRadioButton = new JRadioButtonMenuItem("Median Cut");
 
+        pallet8RadioButton = new JRadioButtonMenuItem("8");
+        pallet16RadioButton = new JRadioButtonMenuItem("16");
+        pallet32RadioButton = new JRadioButtonMenuItem("32");
+        pallet64RadioButton = new JRadioButtonMenuItem("64");
+        pallet128RadioButton = new JRadioButtonMenuItem("128");
+        pallet256RadioButton = new JRadioButtonMenuItem("256");
+        pallet512RadioButton = new JRadioButtonMenuItem("512");
+        pallet1024RadioButton = new JRadioButtonMenuItem("1024");
         //Add Window and Status bar
         getContentPane().add(window, BorderLayout.WEST);
 
         //Set the menu Bar
         setJMenuBar(menuBar);
-
+        pallet256RadioButton.setSelected(true);
         //Add Items to the menu
         menuBar.add(fileMenu);
         menuBar.add(quantificationMenu);
         menuBar.add(ditheringMenu);
+        menuBar.add(palletSizeMenu);
         fileMenu.add(openBMPButton);
         fileMenu.add(openPalletButton);
         fileMenu.add(convertButton);
@@ -91,7 +114,16 @@ public class Window extends JFrame implements ActionListener
         ditheringMenu.add(truncationRadioButton);
         ditheringMenu.add(simpleDitheringRadioButton);
         quantificationMenu.add(popularityRadioButton);
-        quantificationMenu.add(medianCutRadioButtion);
+        quantificationMenu.add(medianCutRadioButton);
+
+        palletSizeMenu.add(pallet8RadioButton);
+        palletSizeMenu.add(pallet16RadioButton);
+        palletSizeMenu.add(pallet32RadioButton);
+        palletSizeMenu.add(pallet64RadioButton);
+        palletSizeMenu.add(pallet128RadioButton);
+        palletSizeMenu.add(pallet256RadioButton);
+        palletSizeMenu.add(pallet512RadioButton);
+        palletSizeMenu.add(pallet1024RadioButton);
 
         //Set default values to radio buttons
         truncationRadioButton.setSelected(true);
@@ -221,7 +253,7 @@ public class Window extends JFrame implements ActionListener
             @Override
             public void mousePressed(MouseEvent e)
             {
-                imageConverter.ConvertAndSaveBMP(BMPFile,255,quantization,dithering);
+                imageConverter.ConvertAndSaveBMP(BMPFile,palletSize,quantization,dithering);
                 window.remove(PBIImage);
                 PBIFile = new File("image.pbi");
                 PLFile = new File("pallet.pl");
@@ -253,16 +285,130 @@ public class Window extends JFrame implements ActionListener
             @Override
             public void mouseReleased(MouseEvent e) {
                 popularityRadioButton.setSelected(true);
-                medianCutRadioButtion.setSelected(false);
+                medianCutRadioButton.setSelected(false);
                 quantization = new Popularity();
             }
         });
-        medianCutRadioButtion.addMouseListener(new MouseAdapter() {
+        medianCutRadioButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                medianCutRadioButtion.setSelected(true);
+                medianCutRadioButton.setSelected(true);
                 popularityRadioButton.setSelected(false);
                 quantization = new MedianCut();
+            }
+        });
+
+        pallet8RadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                palletSize = 8;
+                pallet8RadioButton.setSelected(true);
+                pallet16RadioButton.setSelected(false);
+                pallet32RadioButton.setSelected(false);
+                pallet64RadioButton.setSelected(false);
+                pallet128RadioButton.setSelected(false);
+                pallet256RadioButton.setSelected(false);
+                pallet512RadioButton.setSelected(false);
+                pallet1024RadioButton.setSelected(false);
+            }
+        });
+
+        pallet16RadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                palletSize = 16;
+                pallet8RadioButton.setSelected(false);
+                pallet16RadioButton.setSelected(true);
+                pallet32RadioButton.setSelected(false);
+                pallet64RadioButton.setSelected(false);
+                pallet128RadioButton.setSelected(false);
+                pallet256RadioButton.setSelected(false);
+                pallet512RadioButton.setSelected(false);
+                pallet1024RadioButton.setSelected(false);
+            }
+        });
+        pallet32RadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                palletSize = 32;
+                pallet8RadioButton.setSelected(false);
+                pallet16RadioButton.setSelected(false);
+                pallet32RadioButton.setSelected(true);
+                pallet64RadioButton.setSelected(false);
+                pallet128RadioButton.setSelected(false);
+                pallet256RadioButton.setSelected(false);
+                pallet512RadioButton.setSelected(false);
+                pallet1024RadioButton.setSelected(false);
+            }
+        });
+        pallet64RadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                palletSize = 64;
+                pallet8RadioButton.setSelected(false);
+                pallet16RadioButton.setSelected(false);
+                pallet32RadioButton.setSelected(false);
+                pallet64RadioButton.setSelected(true);
+                pallet128RadioButton.setSelected(false);
+                pallet256RadioButton.setSelected(false);
+                pallet512RadioButton.setSelected(false);
+                pallet1024RadioButton.setSelected(false);
+            }
+        });
+        pallet128RadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                palletSize = 128;
+                pallet8RadioButton.setSelected(false);
+                pallet16RadioButton.setSelected(false);
+                pallet32RadioButton.setSelected(false);
+                pallet64RadioButton.setSelected(false);
+                pallet128RadioButton.setSelected(true);
+                pallet256RadioButton.setSelected(false);
+                pallet512RadioButton.setSelected(false);
+                pallet1024RadioButton.setSelected(false);
+            }
+        });
+        pallet256RadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                palletSize = 256;
+                pallet8RadioButton.setSelected(false);
+                pallet16RadioButton.setSelected(false);
+                pallet32RadioButton.setSelected(false);
+                pallet64RadioButton.setSelected(false);
+                pallet128RadioButton.setSelected(false);
+                pallet256RadioButton.setSelected(true);
+                pallet512RadioButton.setSelected(false);
+                pallet1024RadioButton.setSelected(false);
+            }
+        });
+        pallet512RadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                palletSize = 512;
+                pallet8RadioButton.setSelected(false);
+                pallet16RadioButton.setSelected(false);
+                pallet32RadioButton.setSelected(false);
+                pallet64RadioButton.setSelected(false);
+                pallet128RadioButton.setSelected(false);
+                pallet256RadioButton.setSelected(false);
+                pallet512RadioButton.setSelected(true);
+                pallet1024RadioButton.setSelected(false);
+            }
+        });
+        pallet1024RadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                palletSize = 1024;
+                pallet8RadioButton.setSelected(false);
+                pallet16RadioButton.setSelected(false);
+                pallet32RadioButton.setSelected(false);
+                pallet64RadioButton.setSelected(false);
+                pallet128RadioButton.setSelected(false);
+                pallet256RadioButton.setSelected(false);
+                pallet512RadioButton.setSelected(false);
+                pallet1024RadioButton.setSelected(true);
             }
         });
     }

@@ -22,6 +22,7 @@ public class MedianCut extends Quantization {
 
     private LinkedHashMap<Integer,Byte> PerformMedianCut( List<Color> originalColors, int palletSize)
     {
+        int MaxDepth = (int) (Math.log(palletSize)/Math.log(2));
         List<List<Color>> queue = new LinkedList<>();
         queue.add(originalColors);
         int nextElementsToDepthIncrease = 0;
@@ -32,7 +33,7 @@ public class MedianCut extends Quantization {
             nextElementsToDepthIncrease += 2;
             if (--elementsToDepthIncrease == 0)
             {
-                if (++currentDepth == 8)
+                if (++currentDepth == MaxDepth)
                 {
                     return addToPallet(queue);
                 }
@@ -59,7 +60,6 @@ public class MedianCut extends Quantization {
         LinkedHashMap<Integer,Byte> result = new LinkedHashMap<>();
         byte pos = 0;
         for(List<Color> color : colorList) {
-            System.out.println(pos);
             result.put(findAverage(color).getRGB(), pos++);
         }
         return result;

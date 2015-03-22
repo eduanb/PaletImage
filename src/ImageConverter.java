@@ -47,7 +47,8 @@ public class ImageConverter {
         for (Map.Entry<Integer,Byte> entry : palletHash.entrySet()) {
            joiner.add(entry.getKey().toString());
         }
-        printFile("pallet.pl",joiner.toString());
+        String lineSeparator = System.getProperty("line.separator");
+        printFile("pallet.pl",palletHash.size() + lineSeparator + joiner.toString());
     }
 
     private void printFile(String FileName, String content)

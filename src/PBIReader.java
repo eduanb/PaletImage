@@ -21,8 +21,6 @@ public class PBIReader {
     }
     private void readPallet()
     {
-        pallet = new Color[255];
-
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(plFile));
@@ -31,6 +29,9 @@ public class PBIReader {
         }
         try {
             String line = br.readLine();
+            int palletSize =  Integer.parseInt(line);
+            pallet = new Color[palletSize];
+            line = br.readLine();
             int i = 0;
             for(String palletColor : line.split(","))
             {
